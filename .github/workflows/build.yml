@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os: [windows-2019, macos-10.15, ubuntu-20.04]
     env:
@@ -15,15 +15,22 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
     - name: Install ninja-build tool
       uses: seanmiddleditch/gha-setup-ninja@v3
+
+    - name: Enable Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1.7.0
+
     - name: Download and build LLVM
       run: |
-        cmake -DLLVM_VERSION=${{ env.LLVM_VERSION }} -P download_llvm.cmake
+        cmake "-DLLVM_VERSION=${{ env.LLVM_VERSION }}" -P download_llvm.cmake
         cmake -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} "-DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install-${{ env.LLVM_VERSION }}" "-DLLVM_ENABLE_PROJECTS=clang;lld" -DLLVM_ENABLE_ASSERTIONS=ON -S llvm-${{ env.LLVM_VERSION }}/llvm -B build-${{ env.LLVM_VERSION }}
-        cmake --build build-${{ env.LLVM_VERSION }}
-        cmake --install build-${{ env.LLVM_VERSION }}
-    - uses: actions/upload-artifact@v2
+        cmake --build "build-${{ env.LLVM_VERSION }}"
+        cmake --install "build-${{ env.LLVM_VERSION }}"
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
       with:
         name: llvm-${{ env.LLVM_VERSION }}-${{ matrix.os }}
         path: install-${{ env.LLVM_VERSION }}
