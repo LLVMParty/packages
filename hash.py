@@ -36,7 +36,7 @@ def process_includes(cmake_dir, cmake_path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", action="store_true")
-    parser.add_argument("--short", action="store_true")
+    parser.add_argument("--simple", action="store_true")
     args = parser.parse_args()
 
     # Process CMakeLists.txt and includes
@@ -62,18 +62,20 @@ def main():
     file_hash = hashlib.sha1(final_status.encode("utf-8")).hexdigest()
 
     # Extract the restore_hash from the last commit message
-    commit_message = git("log -1 --pretty=format:%s")
-    match = re.search(r"(reuse_cache|reuse_hash|restore_hash|cache_hash)=([0-9a-f]+)", commit_message)
-    if match:
-        restore_hash = match.group(2)
-    else:
-        restore_hash = file_hash
+    restore_hash = file_hash
+    try:
+        commit_message = git("log -1 --pretty=format:%s")
+        match = re.search(r"(reuse_cache|reuse_hash|restore_hash|cache_hash)=([0-9a-f]+)", commit_message)
+        if match:
+            restore_hash = match.group(2)
+    except:
+        pass
 
     # Print the output variables
-    if args.short:
-        output_vars = file_hash[:8] + "\n"
+    output_vars = ""
+    if args.simple:
+        output_vars += f"{file_hash}\n"
     else:
-        output_vars = ""
         output_vars += f"file_hash={file_hash}\n"
         output_vars += f"restore_hash={restore_hash}\n"
     sys.stdout.write(output_vars)

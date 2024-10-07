@@ -17,6 +17,11 @@ if(CMAKE_OSX_SYSROOT)
     list(APPEND MFILE_ARGS "--extra-cxxflags=-isysroot ${CMAKE_OSX_SYSROOT}")
 endif()
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    list(APPEND MFILE_ARGS "--extra-ccflags=${ADDITIONAL_FLAGS}")
+    list(APPEND MFILE_ARGS "--extra-cxxflags=${ADDITIONAL_FLAGS}")
+endif()
+
 if(BUILD_SHARED_LIBS)
     list(APPEND MFILE_ARGS "--shared")
 else()

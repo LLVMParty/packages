@@ -103,9 +103,14 @@ function(ExternalProject_Add name)
     )
 endfunction()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
-    # Suppress warnings for clang-cl builds, some of these cause compilation errors.
-    list(APPEND ADDITIONAL_FLAGS "-w")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    if(CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
+        # Suppress warnings for clang-cl builds, some of these cause compilation errors.
+        list(APPEND ADDITIONAL_FLAGS "-w")
+    elseif(UNIX AND NOT APPLE)
+        # To compile shared libraries, everything needs to be compiled as position independent code when using clang on linux
+        list(APPEND ADDITIONAL_FLAGS "-fPIC")
+    endif()
 endif()
 
 # Convert a CMake list to a space-separated list

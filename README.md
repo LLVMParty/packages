@@ -17,7 +17,7 @@ docker push "$TAG"
 Build `packages/dependencies`:
 
 ```
-export HASH=$(python hash.py --short)
+export HASH=$(python hash.py --simple | cut -c 1-8)
 export DATE="$(date +"%Y%m%d")"
 export TAG="ghcr.io/llvmparty/packages/dependencies:22.04-llvm19-$DATE-$HASH"
 docker buildx build --platform linux/arm64 -t "$TAG" . -f dependencies.Dockerfile
