@@ -72,7 +72,8 @@ apt install -y --no-install-recommends \
     ninja-build \
     libstdc++-12-dev \
     ncurses-dev \
-    libz-dev
+    libz-dev \
+    binutils
 apt autoremove -y
 rm -rf /var/lib/apt/lists/*
 EOF
