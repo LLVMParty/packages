@@ -13,20 +13,7 @@ else
 fi
 
 # Install the dependencies
-./kitware-archive.sh
-apt-get update && apt-get install -y \
-    git \
-    cmake \
-    ninja-build \
+apt update && apt install --no-install-recommends -y \
     flex \
     bison \
-    g++-12 \
-    gcc-12 \
-    python3 \
-    libxml2-dev \
-    ncurses-dev \
-    libz-dev \
-    libsqlite3-dev \
-    sqlite3 \
-    $cross_packages \
-    && rm -rf /var/lib/apt/lists/*
+    $cross_packages

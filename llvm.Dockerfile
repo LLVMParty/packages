@@ -8,6 +8,7 @@ WORKDIR /tmp
 COPY superbuild.cmake llvm.cmake ./
 COPY <<EOF CMakeLists.txt
 cmake_minimum_required(VERSION 3.22)
+project(llvm)
 include(superbuild.cmake)
 include(llvm.cmake)
 EOF
