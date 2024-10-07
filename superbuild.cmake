@@ -1,7 +1,7 @@
 include_guard()
 
 # Bail out early for multi-config generators
-if(GENERATOR_IS_MULTI_CONFIG)
+if(CMAKE_CONFIGURATION_TYPES)
     message(FATAL_ERROR "Multi-config generators are not supported. Use Make/NMake/Ninja instead")
 endif()
 
@@ -14,8 +14,6 @@ set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
 if(CMAKE_BUILD_TYPE STREQUAL "")
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 endif()
-
-project(superbuild)
 
 message(STATUS "Configuration: ${CMAKE_BUILD_TYPE}")
 
@@ -35,6 +33,40 @@ if(NINJA_EXECUTABLE STREQUAL "NINJA_EXECUTABLE-NOTFOUND")
     message(FATAL_ERROR "Could not find 'ninja' in the PATH")
 endif()
 message(STATUS "Ninja: ${NINJA_EXECUTABLE}")
+
+# On macOS, search Homebrew for keg-only versions of Bison and Flex. Xcode does
+# not provide new enough versions for us to use.
+if(CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
+    execute_process(
+        COMMAND brew --prefix bison 
+        RESULT_VARIABLE BREW_BISON
+        OUTPUT_VARIABLE BREW_BISON_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if(BREW_BISON EQUAL 0 AND EXISTS "${BREW_BISON_PREFIX}")
+        message(STATUS "Found Bison keg installed by Homebrew at ${BREW_BISON_PREFIX}")
+        set(BISON_EXECUTABLE "${BREW_BISON_PREFIX}/bin/bison")
+    else()
+        message(FATAL_ERROR "Bison not found, to install: brew install bison")
+    endif()
+    
+    execute_process(
+        COMMAND brew --prefix flex 
+        RESULT_VARIABLE BREW_FLEX
+        OUTPUT_VARIABLE BREW_FLEX_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if(BREW_FLEX EQUAL 0 AND EXISTS "${BREW_FLEX_PREFIX}")
+        message(STATUS "Found Flex keg installed by Homebrew at ${BREW_FLEX_PREFIX}")
+        set(FLEX_EXECUTABLE "${BREW_FLEX_PREFIX}/bin/flex")
+    else()
+        message(FATAL_ERROR "Flex not found, to install: brew install flex")
+    endif()
+else()
+    message(STATUS "Looking for flex/bison")
+    find_package(FLEX 2.6 REQUIRED)
+    find_package(BISON 2.6 REQUIRED)
+endif()
 
 # Documentation: https://cmake.org/cmake/help/latest/module/ExternalProject.html
 include(ExternalProject)
@@ -71,16 +103,24 @@ function(ExternalProject_Add name)
     )
 endfunction()
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
+    # Suppress warnings for clang-cl builds, some of these cause compilation errors.
+    list(APPEND ADDITIONAL_FLAGS "-w")
+endif()
+
+# Convert a CMake list to a space-separated list
+list(JOIN ADDITIONAL_FLAGS " " ADDITIONAL_FLAGS)
+
 # Default cache variables for all projects
 list(APPEND CMAKE_ARGS
-    "-DCMAKE_PREFIX_PATH:FILEPATH=${CMAKE_INSTALL_PREFIX}"
+    "-DCMAKE_PREFIX_PATH:FILEPATH=${CMAKE_INSTALL_PREFIX};${CMAKE_PREFIX_PATH}"
     "-DCMAKE_INSTALL_PREFIX:FILEPATH=${CMAKE_INSTALL_PREFIX}"
     "-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}"
     "-DBUILD_SHARED_LIBS:STRING=OFF"
     "-DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}"
     "-DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}"
-    "-DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}"
-    "-DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}"
+    "-DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS} ${ADDITIONAL_FLAGS}"
+    "-DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS} ${ADDITIONAL_FLAGS}"
 )
 
 function(simple_git repo tag)
@@ -105,8 +145,15 @@ function(simple_submodule folder)
     if(NOT EXISTS "${folder_path}" OR NOT EXISTS "${folder_path}/CMakeLists.txt")
         message(STATUS "Submodule '${folder}' not initialized, running git...")
         execute_process(
-            COMMAND "${GIT_EXECUTABLE}" submodule update --init
+            COMMAND "${GIT_EXECUTABLE}" rev-parse --show-toplevel
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+            OUTPUT_VARIABLE git_root
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            COMMAND_ERROR_IS_FATAL ANY
+        )
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" submodule update --init
+            WORKING_DIRECTORY "${git_root}"
             COMMAND_ERROR_IS_FATAL ANY
         )
     endif()
