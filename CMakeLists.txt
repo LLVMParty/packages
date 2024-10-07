@@ -38,11 +38,13 @@ simple_git(https://github.com/yhirose/cpp-httplib v0.13.1
     "-DHTTPLIB_USE_BROTLI_IF_AVAILABLE:STRING=OFF"
 )
 simple_git(https://github.com/gflags/gflags v2.2.2
+)
+simple_git(https://github.com/google/glog v0.6.0
     "-DGFLAGS_USE_TARGET_NAMESPACE:STRING=ON"
 )
-simple_git(https://github.com/google/glog v0.6.0)
 simple_git(https://github.com/google/googletest v1.15.2
     "-Dgtest_force_shared_crt:STRING=ON"
+    "-DGFLAGS_USE_TARGET_NAMESPACE:STRING=ON"
 )
 simple_git(https://github.com/redis/hiredis afc29ee)
 simple_git(https://github.com/Tessil/ordered-map v1.1.0)
@@ -80,7 +82,6 @@ endif()
 simple_git(https://github.com/LLVMParty/remill llvm-19-v1
     "-DUSE_SYSTEM_DEPENDENCIES:STRING=ON"
     "-DREMILL_ENABLE_TESTING:STRING=OFF"
-    "-DGFLAGS_USE_TARGET_NAMESPACE:STRING=ON"
 )
 simple_git(https://github.com/LLVMParty/alive2 cmake-package-souper-v7)
 simple_git(https://github.com/LLVMParty/souper cmake-package-v6)

@@ -19,9 +19,13 @@ message(STATUS "Configuration: ${CMAKE_BUILD_TYPE}")
 
 # Default to build/install (setting this variable is not recommended and might cause conflicts)
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/install" CACHE PATH "Install prefix" FORCE)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/../install" CACHE PATH "Install prefix" FORCE)
 endif()
 message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
+
+# Save the host platform in the install prefix
+make_directory(${CMAKE_INSTALL_PREFIX})
+file(TOUCH ${CMAKE_INSTALL_PREFIX}/${CMAKE_SYSTEM}.build)
 
 # Git is necessary for submodules
 find_package(Git REQUIRED)

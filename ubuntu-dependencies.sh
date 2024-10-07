@@ -13,7 +13,4 @@ else
 fi
 
 # Install the dependencies
-apt update && apt install --no-install-recommends -y \
-    flex \
-    bison \
-    $cross_packages
+apt update && apt install --no-install-recommends -y $cross_packages

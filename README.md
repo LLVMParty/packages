@@ -7,11 +7,11 @@
 Build `packages/ubuntu`:
 
 ```
-export TAG="ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.0"
-docker buildx build --platform linux/arm64 -t "$TAG" . -f llvm.Dockerfile
-docker buildx build --platform linux/amd64 -t "$TAG" . -f llvm.Dockerfile
-docker buildx build --platform linux/arm64,linux/amd64 -t "$TAG" . -f llvm.Dockerfile
-docker push "$TAG"
+export LLVM_TAG="ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.0"
+docker buildx build --platform linux/arm64 -t "$LLVM_TAG" . -f llvm.Dockerfile
+docker buildx build --platform linux/amd64 -t "$LLVM_TAG" . -f llvm.Dockerfile
+docker buildx build --platform linux/arm64,linux/amd64 -t "$LLVM_TAG" . -f llvm.Dockerfile
+docker push "$LLVM_TAG"
 ```
 
 Build `packages/dependencies`:
