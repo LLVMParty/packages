@@ -4,10 +4,16 @@ message(STATUS "Python3: ${Python3_EXECUTABLE}")
 # TODO: pass compiler flags
 
 set(CONFIGURE_ARGS
+    "--assertions"
+    "--no-testing"
+    "--no-unit-testing"
     "--prefix"
     "<SOURCE_DIR>/install"
-    "release"
 )
+
+if(USE_SANITIZERS)
+    list(APPEND CONFIGURE_ARGS "--assertions --asan --ubsan")
+endif()
 
 if(BUILD_SHARED_LIBS)
     list(APPEND CONFIGURE_ARGS "--shared")
@@ -17,9 +23,9 @@ endif()
 
 ExternalProject_Add(bitwuzla
     GIT_REPOSITORY
-        "https://github.com/bitwuzla/bitwuzla"
+        "https://github.com/LLVMParty/bitwuzla"
     GIT_TAG
-        "0.6.0"
+        "sanitizers_fix"
     GIT_PROGRESS
         ON
     GIT_SHALLOW
