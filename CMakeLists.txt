@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.22)
 
 project(dependencies)
 
-option(USE_SYSTEM_LLVM "Use system LLVM" OFF)
+option(USE_EXTERNAL_LLVM "Do not compile LLVM as part of the superbuild, use an external one instead" OFF)
 
-if(USE_SYSTEM_LLVM)
+if(USE_EXTERNAL_LLVM)
     if(CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" AND NOT CMAKE_PREFIX_PATH)
         execute_process(
             COMMAND brew --prefix llvm 
@@ -76,7 +76,7 @@ simple_git(https://github.com/stp/stp a9bc247d98cd98213b2d0f6821dc51b823c50483
     "-DSTATICCOMPILE:STRING=ON"
 )
 include(xed.cmake)
-if(NOT USE_SYSTEM_LLVM)
+if(NOT USE_EXTERNAL_LLVM)
     include(llvm.cmake)
 endif()
 simple_git(https://github.com/LLVMParty/remill llvm-19-v1

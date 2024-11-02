@@ -141,6 +141,11 @@ if(CMAKE_CXX_COMPILER_LAUNCHER)
     list(APPEND CMAKE_ARGS "-DCMAKE_CXX_COMPILER_LAUNCHER:STRING=${CMAKE_CXX_COMPILER_LAUNCHER}")
 endif()
 
+message(STATUS "Compiling all dependencies with the following CMake arguments:")
+foreach(CMAKE_ARG ${CMAKE_ARGS})
+    message("\t${CMAKE_ARG}")
+endforeach()
+
 function(simple_git repo tag)
     get_filename_component(name "${repo}" NAME_WE)
     ExternalProject_Add(${name}
