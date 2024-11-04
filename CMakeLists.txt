@@ -82,6 +82,7 @@ simple_git(https://github.com/stp/stp a9bc247d98cd98213b2d0f6821dc51b823c50483
     "-DBUILD_EXECUTABLES:STRING=OFF"
     "-DSTATICCOMPILE:STRING=ON"
 )
+include(gmp.cmake)
 include(xed.cmake)
 include(bitwuzla.cmake)
 if(NOT USE_SYSTEM_LLVM)
