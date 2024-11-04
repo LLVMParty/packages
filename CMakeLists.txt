@@ -4,11 +4,12 @@ cmake_minimum_required(VERSION 3.22)
 project(dependencies)
 
 option(USE_EXTERNAL_LLVM "Do not compile LLVM as part of the superbuild, use an external one instead" OFF)
+option(USE_SANITIZERS "Use ASan and UBSan" OFF)
 
 if(USE_EXTERNAL_LLVM)
     if(CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" AND NOT CMAKE_PREFIX_PATH)
         execute_process(
-            COMMAND brew --prefix llvm 
+            COMMAND brew --prefix llvm
             RESULT_VARIABLE BREW_LLVM
             OUTPUT_VARIABLE BREW_LLVM_PREFIX
             OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -24,8 +25,12 @@ if(USE_EXTERNAL_LLVM)
     message(STATUS "LLVM ${LLVM_PACKAGE_VERSION}: ${LLVM_DIR}")
 endif()
 
-include(superbuild.cmake)
+if(USE_SANITIZERS)
+    list(APPEND CMAKE_C_FLAGS "-fsanitize=address,undefined")
+    list(APPEND CMAKE_CXX_FLAGS "-fsanitize=address,undefined")
+endif()
 
+include(superbuild.cmake)
 simple_git(https://github.com/nlohmann/json v3.11.3
     "-DJSON_BuildTests:STRING=OFF"
 )
@@ -41,6 +46,7 @@ simple_git(https://github.com/gflags/gflags v2.2.2
 )
 simple_git(https://github.com/google/glog v0.6.0
     "-DGFLAGS_USE_TARGET_NAMESPACE:STRING=ON"
+    "-DBUILD_TESTING:STRING=OFF"
 )
 simple_git(https://github.com/google/googletest v1.15.2
     "-Dgtest_force_shared_crt:STRING=ON"
@@ -64,6 +70,7 @@ simple_git(https://github.com/lief-project/LIEF 0.15.1
 )
 simple_git(https://github.com/capstone-engine/capstone 5.0.3
     "-DCAPSTONE_BUILD_TESTS:STRING=OFF"
+    "-DCAPSTONE_BUILD_CSTOOL:STRING=OFF"
 )
 simple_git(https://github.com/Z3Prover/z3 z3-4.13.2
     "-DZ3_BUILD_LIBZ3_SHARED:STRING=OFF"
@@ -80,7 +87,7 @@ include(bitwuzla.cmake)
 if(NOT USE_EXTERNAL_LLVM)
     include(llvm.cmake)
 endif()
-simple_git(https://github.com/LLVMParty/remill llvm-19-v1
+simple_git(https://github.com/LLVMParty/remill llvm-19-v2
     "-DUSE_SYSTEM_DEPENDENCIES:STRING=ON"
     "-DREMILL_ENABLE_TESTING:STRING=OFF"
 )

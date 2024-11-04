@@ -22,6 +22,11 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     list(APPEND MFILE_ARGS "--extra-cxxflags=${ADDITIONAL_FLAGS}")
 endif()
 
+if(USE_SANITIZERS)
+    list(APPEND MFILE_ARGS "--extra-ccflags=-fsanitize=address,undefined")
+    list(APPEND MFILE_ARGS "--extra-cxxflags=-fsanitize=address,undefined")
+endif()
+
 if(BUILD_SHARED_LIBS)
     list(APPEND MFILE_ARGS "--shared")
 else()
@@ -36,7 +41,7 @@ ExternalProject_Add(mbuild
     GIT_REPOSITORY
         "https://github.com/intelxed/mbuild"
     GIT_TAG
-        "v2022.07.28"
+        "v2024.09.08"
     GIT_PROGRESS
         ON
     GIT_SHALLOW
@@ -53,9 +58,9 @@ ExternalProject_Add(mbuild
 
 ExternalProject_Add(xed
     GIT_REPOSITORY
-        "https://github.com/intelxed/xed"
+        "https://github.com/LLVMParty/xed"
     GIT_TAG
-        "v2022.10.11"
+        "sanitizers-v1"
     GIT_PROGRESS
         ON
     GIT_SHALLOW
