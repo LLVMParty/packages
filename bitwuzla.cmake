@@ -1,31 +1,33 @@
-find_package(Python3 COMPONENTS Interpreter REQUIRED)
-message(STATUS "Python3: ${Python3_EXECUTABLE}")
-
 # TODO: pass compiler flags
 
 set(CONFIGURE_ARGS
-    "--assertions"
-    "--no-testing"
-    "--no-unit-testing"
-    "--prefix"
-    "<SOURCE_DIR>/install"
+    "-Db_ndebug=true"
+    "-Dtesting=disabled"
+    "-Dunit_testing=disabled"
+    "-Dprefix=${CMAKE_INSTALL_PREFIX}"
+    "-Dbuildtype=debugoptimized"
+    "-Dpkg_config_path=${CMAKE_INSTALL_PREFIX}/lib/pkgconfig"
 )
 
 if(USE_SANITIZERS)
-    list(APPEND CONFIGURE_ARGS "--assertions --asan --ubsan")
+    list(APPEND CONFIGURE_ARGS
+        "-Db_ndebug=false"
+        "-Db_sanitize=address,undefined"
+        "-Db_lundef=false"
+    )
 endif()
 
 if(BUILD_SHARED_LIBS)
-    list(APPEND CONFIGURE_ARGS "--shared")
+    list(APPEND CONFIGURE_ARGS "-Ddefault_library=shared")
 else()
-    list(APPEND CONFIGURE_ARGS "--static")
+    list(APPEND CONFIGURE_ARGS "-Ddefault_library=static")
 endif()
 
 ExternalProject_Add(bitwuzla
     GIT_REPOSITORY
         "https://github.com/LLVMParty/bitwuzla"
     GIT_TAG
-        "sanitizers_fix"
+        "sanitizers"
     GIT_PROGRESS
         ON
     GIT_SHALLOW
@@ -35,11 +37,14 @@ ExternalProject_Add(bitwuzla
     BUILD_IN_SOURCE
         1
     CONFIGURE_COMMAND
-        "${Python3_EXECUTABLE}" "<SOURCE_DIR>/configure.py" ${CONFIGURE_ARGS}
+        "meson"
+        "setup"
+        "build"
+        ${CONFIGURE_ARGS}
     BUILD_COMMAND
-        "ninja" "-C" "<SOURCE_DIR>/build" "install"
+        "ninja" "-C" "<SOURCE_DIR>/build"
     INSTALL_COMMAND
-        "${CMAKE_COMMAND}" -E copy_directory <SOURCE_DIR>/install "${CMAKE_INSTALL_PREFIX}"
+        "ninja" "-C" "<SOURCE_DIR>/build" "install"
     PREFIX
         bitwuzla-prefix
 )
