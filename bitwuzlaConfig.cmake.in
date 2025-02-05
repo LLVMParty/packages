@@ -1,0 +1,39 @@
+if(bitwuzla_FOUND)
+    return()
+endif()
+
+get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
+
+find_library(bitwuzla_LIBRARY bitwuzla PATHS "${PACKAGE_PREFIX_DIR}/lib" NO_CACHE REQUIRED NO_DEFAULT_PATH)
+add_library(bitwuzla::bitwuzla STATIC IMPORTED)
+set_target_properties(bitwuzla::bitwuzla PROPERTIES
+    IMPORTED_CONFIGURATIONS "NOCONFIG"
+    IMPORTED_LOCATION_NOCONFIG "${bitwuzla_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
+)
+
+find_library(bitwuzlabb_LIBRARY bitwuzlabb PATHS "${PACKAGE_PREFIX_DIR}/lib" NO_CACHE REQUIRED NO_DEFAULT_PATH)
+add_library(bitwuzla::bitwuzlabb STATIC IMPORTED)
+set_target_properties(bitwuzla::bitwuzlabb PROPERTIES
+    IMPORTED_CONFIGURATIONS "NOCONFIG"
+    IMPORTED_LOCATION_NOCONFIG "${bitwuzlabb_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
+)
+
+find_library(bitwuzlabv_LIBRARY bitwuzlabv PATHS "${PACKAGE_PREFIX_DIR}/lib" NO_CACHE REQUIRED NO_DEFAULT_PATH)
+add_library(bitwuzla::bitwuzlabv STATIC IMPORTED)
+set_target_properties(bitwuzla::bitwuzlabv PROPERTIES
+    IMPORTED_CONFIGURATIONS "NOCONFIG"
+    IMPORTED_LOCATION_NOCONFIG "${bitwuzlabv_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
+)
+
+find_library(bitwuzlals_LIBRARY bitwuzlals PATHS "${PACKAGE_PREFIX_DIR}/lib" NO_CACHE REQUIRED NO_DEFAULT_PATH)
+add_library(bitwuzla::bitwuzlals STATIC IMPORTED)
+set_target_properties(bitwuzla::bitwuzlals PROPERTIES
+    IMPORTED_CONFIGURATIONS "NOCONFIG"
+    IMPORTED_LOCATION_NOCONFIG "${bitwuzlals_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
+)
+
+set(bitwuzla_FOUND ON)

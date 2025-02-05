@@ -49,5 +49,5 @@ ExternalProject_Add(bitwuzla
         bitwuzla-prefix
 )
 
-# TODO: generate BITWUZLAVersion.cmake as well file
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/BITWUZLAConfig.cmake.in" "${CMAKE_INSTALL_PREFIX}/lib/cmake/bitwuzla/BITWUZLAConfig.cmake" @ONLY)
+# TODO: generate bitwuzlaVersion.cmake as well file
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/bitwuzlaConfig.cmake.in" "${CMAKE_INSTALL_PREFIX}/lib/cmake/bitwuzla/bitwuzlaConfig.cmake" @ONLY)
