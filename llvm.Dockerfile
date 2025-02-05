@@ -71,6 +71,7 @@ apt install --no-install-recommends -y \
     cmake \
     curl \
     python-is-python3 \
+    python3-pip \
     git \
     make \
     ninja-build \

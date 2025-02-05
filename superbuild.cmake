@@ -34,11 +34,18 @@ find_package(Git REQUIRED)
 message(STATUS "Git: ${GIT_EXECUTABLE}")
 
 # Ninja is necessary for building the dependencies
-find_program(NINJA_EXECUTABLE ninja NO_CACHE NO_PACKAGE_ROOT_PATH NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_INSTALL_PREFIX NO_CMAKE_FIND_ROOT_PATH)
-if(NINJA_EXECUTABLE STREQUAL "NINJA_EXECUTABLE-NOTFOUND")
+find_program(ninja_EXECUTABLE ninja NO_CACHE NO_PACKAGE_ROOT_PATH NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_INSTALL_PREFIX NO_CMAKE_FIND_ROOT_PATH)
+if(ninja_EXECUTABLE STREQUAL "ninja_EXECUTABLE-NOTFOUND")
     message(FATAL_ERROR "Could not find 'ninja' in the PATH")
 endif()
-message(STATUS "Ninja: ${NINJA_EXECUTABLE}")
+message(STATUS "Ninja: ${ninja_EXECUTABLE}")
+
+# Ninja is necessary for building the dependencies
+find_program(meson_EXECUTABLE meson NO_CACHE NO_PACKAGE_ROOT_PATH NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_INSTALL_PREFIX NO_CMAKE_FIND_ROOT_PATH)
+if(meson_EXECUTABLE STREQUAL "meson_EXECUTABLE-NOTFOUND")
+    message(FATAL_ERROR "Could not find 'meson' in the PATH")
+endif()
+message(STATUS "meson: ${meson_EXECUTABLE}")
 
 # On macOS, search Homebrew for keg-only versions of Bison and Flex. Xcode does
 # not provide new enough versions for us to use.

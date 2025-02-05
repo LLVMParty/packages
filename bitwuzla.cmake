@@ -37,14 +37,11 @@ ExternalProject_Add(bitwuzla
     BUILD_IN_SOURCE
         1
     CONFIGURE_COMMAND
-        "meson"
-        "setup"
-        "build"
-        ${CONFIGURE_ARGS}
+        meson setup build ${CONFIGURE_ARGS}
     BUILD_COMMAND
-        "ninja" "-C" "<SOURCE_DIR>/build"
+        ninja -C "<SOURCE_DIR>/build"
     INSTALL_COMMAND
-        "ninja" "-C" "<SOURCE_DIR>/build" "install"
+        ninja -C "<SOURCE_DIR>/build" "install"
     PREFIX
         bitwuzla-prefix
 )

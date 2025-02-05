@@ -3,7 +3,7 @@
 ## Building (macOS)
 
 ```sh
-brew install cmake ninja flex bison
+brew install cmake ninja flex bison meson
 cmake -B build
 cmake --build build
 ```
