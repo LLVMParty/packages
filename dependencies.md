@@ -118,34 +118,6 @@ For the `simple_git` helper and `ExternalProject_Add` with the `GIT_REPOSITORY` 
 
 Another thing to be aware of is that the order of dependencies matters. Dependencies lower in the tree should be first, otherwise the dependencies higher up the tree will not build.
 
-## Docker
-
-For convenience there is a [`Dockerfile`](./Dockerfile) provided.
-
-To build:
-
-```
-git submodule update --init
-docker buildx build --platform linux/arm64,linux/amd64 -t ghcr.io/mrexodia/cxx-common-cmake:latest .
-```
-
-Then push (maintainers only):
-
-```
-docker push ghcr.io/mrexodia/cxx-common-cmake:latest
-```
-
-Additionally generate the hash with `python hash.py` and push that tag:
-
-```
-docker tag ghcr.io/mrexodia/cxx-common-cmake:latest ghcr.io/mrexodia/cxx-common-cmake:20240808_b94d6786
-docker push ghcr.io/mrexodia/cxx-common-cmake:20240808_b94d6786
-```
-
-References:
-- https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/
-- https://docs.docker.com/build/building/multi-stage/
-
 ## GitHub Actions
 
 Below is an example `.github/workflows/build.yml` that uses `hash.py` to build and cache the dependencies (it assumes this repository was placed in the `dependencies` folder):

@@ -25,3 +25,7 @@ docker buildx build --platform linux/amd64 -t "$TAG" . -f dependencies.Dockerfil
 docker buildx build --platform linux/arm64,linux/amd64 -t "$TAG" . -f dependencies.Dockerfile
 docker push "$TAG"
 ```
+
+References:
+- https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/
+- https://docs.docker.com/build/building/multi-stage/
