@@ -2,6 +2,8 @@ if(bitwuzla_FOUND)
     return()
 endif()
 
+find_dependency(GMP REQUIRED)
+
 get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
 
 find_library(bitwuzla_LIBRARY bitwuzla PATHS "${PACKAGE_PREFIX_DIR}/lib" NO_CACHE REQUIRED NO_DEFAULT_PATH)
@@ -34,6 +36,13 @@ set_target_properties(bitwuzla::bitwuzlals PROPERTIES
     IMPORTED_CONFIGURATIONS "NOCONFIG"
     IMPORTED_LOCATION_NOCONFIG "${bitwuzlals_LIBRARY}"
     INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
+)
+
+target_link_libraries(bitwuzla::bitwuzla INTERFACE
+    GMP::GMP
+    bitwuzla::bitwuzlabb
+    bitwuzla::bitwuzlabv
+    bitwuzla::bitwuzlals
 )
 
 set(bitwuzla_FOUND ON)

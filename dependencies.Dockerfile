@@ -14,12 +14,21 @@ COPY \
     ubuntu-dependencies.sh \
     ./
 
-# Install compilation dependencies (Kitware GPG key expires frequently)
+# I forgot to install some dependencies in the base image
 RUN \
 wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
-echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null && \
-./ubuntu-dependencies.sh python3-pip && \
-python -m pip install meson && \
+apt update && \
+rm /usr/share/keyrings/kitware-archive-keyring.gpg && \
+apt install --no-install-recommends -y \
+    kitware-archive-keyring \
+    python3-pip \
+    && \
+rm -rf /var/lib/apt/lists/* && \
+python -m pip --no-cache-dir install meson
+
+# Install remill cross-compilation dependencies
+RUN \
+./ubuntu-dependencies.sh && \
 rm -rf /var/lib/apt/lists/*
 
 # Build dependencies
@@ -33,6 +42,18 @@ rm -rf build
 # Actual final image
 FROM ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.0 AS dependencies
 LABEL org.opencontainers.image.source=https://github.com/LLVMParty/packages
+
+# I forgot to install some dependencies in the base image
+RUN \
+wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
+apt update && \
+rm /usr/share/keyrings/kitware-archive-keyring.gpg && \
+apt install --no-install-recommends -y \
+    kitware-archive-keyring \
+    python3-pip \
+    && \
+rm -rf /var/lib/apt/lists/* && \
+python -m pip --no-cache-dir install meson
 
 COPY --from=build /dependencies /dependencies
 ENV CMAKE_PREFIX_PATH="/dependencies" \

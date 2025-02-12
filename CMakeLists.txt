@@ -93,4 +93,4 @@ simple_git(https://github.com/LLVMParty/remill llvm-19-v2
     "-DREMILL_ENABLE_TESTING:STRING=OFF"
 )
 simple_git(https://github.com/LLVMParty/alive2 cmake-package-souper-v7)
-simple_git(https://github.com/LLVMParty/souper cmake-package-v7)
+simple_git(https://github.com/LLVMParty/souper cmake-package-v8)
