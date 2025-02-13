@@ -31,6 +31,14 @@ if(USE_SANITIZERS)
 endif()
 
 include(superbuild.cmake)
+
+# Meson is necessary to build bitwuzla
+find_program(meson_EXECUTABLE meson NO_CACHE NO_PACKAGE_ROOT_PATH NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_INSTALL_PREFIX NO_CMAKE_FIND_ROOT_PATH)
+if(meson_EXECUTABLE STREQUAL "meson_EXECUTABLE-NOTFOUND")
+    message(FATAL_ERROR "Could not find 'meson' in the PATH")
+endif()
+message(STATUS "meson: ${meson_EXECUTABLE}")
+
 simple_git(https://github.com/nlohmann/json v3.11.3
     "-DJSON_BuildTests:STRING=OFF"
 )

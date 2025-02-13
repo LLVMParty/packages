@@ -1,4 +1,4 @@
-FROM ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.0 AS build
+FROM ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.7 AS build
 WORKDIR /tmp
 COPY \
     bitwuzla.cmake \
@@ -13,18 +13,6 @@ COPY \
     XEDConfig.cmake.in \
     ubuntu-dependencies.sh \
     ./
-
-# I forgot to install some dependencies in the base image
-RUN \
-wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
-apt update && \
-rm /usr/share/keyrings/kitware-archive-keyring.gpg && \
-apt install --no-install-recommends -y \
-    kitware-archive-keyring \
-    python3-pip \
-    && \
-rm -rf /var/lib/apt/lists/* && \
-python -m pip --no-cache-dir install meson
 
 # Install remill cross-compilation dependencies
 RUN \
@@ -42,18 +30,6 @@ rm -rf build
 # Actual final image
 FROM ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.0 AS dependencies
 LABEL org.opencontainers.image.source=https://github.com/LLVMParty/packages
-
-# I forgot to install some dependencies in the base image
-RUN \
-wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
-apt update && \
-rm /usr/share/keyrings/kitware-archive-keyring.gpg && \
-apt install --no-install-recommends -y \
-    kitware-archive-keyring \
-    python3-pip \
-    && \
-rm -rf /var/lib/apt/lists/* && \
-python -m pip --no-cache-dir install meson
 
 COPY --from=build /dependencies /dependencies
 ENV CMAKE_PREFIX_PATH="/dependencies" \

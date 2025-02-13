@@ -44,7 +44,7 @@ apt install --no-install-recommends -y \
 # Build LLVM
 RUN \
 mkdir /llvm && \
-cmake -B build "-DCMAKE_INSTALL_PREFIX=/llvm" && \
+cmake -B build "-DCMAKE_INSTALL_PREFIX=/llvm" "-DBUILD_SHARED_LIBS=ON" && \
 cmake --build build && \
 rm -rf build
 
@@ -67,7 +67,9 @@ apt install --no-install-recommends -y \
 wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
 echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null && \
 apt update && \
+rm /usr/share/keyrings/kitware-archive-keyring.gpg && \
 apt install --no-install-recommends -y \
+    kitware-archive-keyring \
     cmake \
     curl \
     python-is-python3 \
@@ -83,6 +85,8 @@ apt install --no-install-recommends -y \
     binutils \
     flex \
     bison \
+    pkg-config \
     && \
 apt autoremove -y && \
-rm -rf /var/lib/apt/lists/*
+rm -rf /var/lib/apt/lists/* && \
+python -m pip --no-cache-dir install meson
