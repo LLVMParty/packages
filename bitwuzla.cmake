@@ -5,6 +5,7 @@ set(CONFIGURE_ARGS
     "-Dtesting=disabled"
     "-Dunit_testing=disabled"
     "-Dprefix=${CMAKE_INSTALL_PREFIX}"
+    "-Dlibdir=lib"
     "-Dbuildtype=debugoptimized"
     "-Dpkg_config_path=${CMAKE_INSTALL_PREFIX}/lib/pkgconfig"
 )
