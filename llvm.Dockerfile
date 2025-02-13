@@ -76,6 +76,7 @@ apt install --no-install-recommends -y \
     python-is-python3 \
     python3-pip \
     git \
+    git-lfs \
     make \
     ninja-build \
     libstdc++-12-dev \
