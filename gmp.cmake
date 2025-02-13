@@ -33,7 +33,7 @@ ExternalProject_Add(gmp
     CONFIGURE_COMMAND
         "<SOURCE_DIR>/configure" ${CONFIGURE_ARGS}
     BUILD_COMMAND
-        "make"
+        "make" -j
     INSTALL_COMMAND
         "make" "install"
     PREFIX
