@@ -1,7 +1,8 @@
 # Reference: https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/
+ARG UBUNTU_VERSION=22.04
 
 # Build stage (no need to optimize for size)
-FROM ubuntu:22.04 AS build
+FROM ubuntu:${UBUNTU_VERSION} AS build
 WORKDIR /tmp
 
 # Create superbuild project
@@ -49,7 +50,7 @@ cmake --build build && \
 rm -rf build
 
 # Actual final image
-FROM ubuntu:22.04 AS llvm
+FROM ubuntu:${UBUNTU_VERSION} AS llvm
 LABEL org.opencontainers.image.source=https://github.com/LLVMParty/packages
 
 # Copy LLVM installation
