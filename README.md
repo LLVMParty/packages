@@ -1,6 +1,15 @@
 # packages
 
-## Build instructions
+## Local builds
+
+```sh
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
+
+This will create a [CMake prefix](https://cmake.org/cmake/help/latest/command/find_package.html#search-procedure), which you pass to your project with `-DCMAKE_PREFIX_PATH=/path/to/packages/install`. See [`presentation.md`](./presentation.md) and [`dependencies.md`](./dependencies.md) for more details.
+
+## Docker Image Build Instructions
 
 **Note**: End users do not need to run these commands, they are just here for reference.
 
