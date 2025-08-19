@@ -14,7 +14,7 @@ cmake --build build
 
 ```sh
 sudo ./ubuntu-dependencies.sh
-cmake -B build "-DCMAKE_C_COMPILER=$(which clang)" "-DCMAKE_CXX_COMPILER=$(which clang)"
+cmake -B build "-DCMAKE_C_COMPILER=$(which clang)" "-DCMAKE_CXX_COMPILER=$(which clang++)"
 cmake --build build
 ```
 
@@ -174,11 +174,11 @@ jobs:
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
           sudo ./ubuntu-dependencies.sh
-          cmake -B dependencies/build -S dependencies "-DCMAKE_C_COMPILER=$(which clang)" "-DCMAKE_CXX_COMPILER=$(which clang)"
+          cmake -B dependencies/build -S dependencies "-DCMAKE_C_COMPILER=$(which clang)" "-DCMAKE_CXX_COMPILER=$(which clang++)"
           cmake --build dependencies/build
 
       - name: Build Project
         run: |
-          cmake -B build -G Ninja "-DCMAKE_BUILD_TYPE=Debug" "-DCMAKE_PREFIX_PATH=$(pwd)/dependencies/build/install" "-DCMAKE_C_COMPILER=$(which clang)" "-DCMAKE_CXX_COMPILER=$(which clang)"
+          cmake -B build -G Ninja "-DCMAKE_BUILD_TYPE=Debug" "-DCMAKE_PREFIX_PATH=$(pwd)/dependencies/build/install" "-DCMAKE_C_COMPILER=$(which clang)" "-DCMAKE_CXX_COMPILER=$(which clang++)"
           cmake --build build
 ```
