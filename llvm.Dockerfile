@@ -1,8 +1,16 @@
 # Reference: https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/
 ARG UBUNTU_VERSION=22.04
+ARG LLVM_URL
+ARG LLVM_SHA256
 
 # Build stage (no need to optimize for size)
 FROM ubuntu:${UBUNTU_VERSION} AS build
+
+# Inherit arguments
+# https://docs.docker.com/build/building/variables/#scoping
+ARG LLVM_URL
+ARG LLVM_SHA256
+
 WORKDIR /tmp
 
 # Create superbuild project
@@ -45,7 +53,7 @@ apt install --no-install-recommends -y \
 # Build LLVM
 RUN \
 mkdir /llvm && \
-cmake -B build "-DCMAKE_INSTALL_PREFIX=/llvm" "-DBUILD_SHARED_LIBS=ON" && \
+cmake -B build "-DCMAKE_INSTALL_PREFIX=/llvm" "-DBUILD_SHARED_LIBS=ON" "-DLLVM_URL=${LLVM_URL}" "-DLLVM_SHA256=${LLVM_SHA256}" && \
 cmake --build build && \
 rm -rf build
 

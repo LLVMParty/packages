@@ -1,5 +1,13 @@
 option(LLVM_ENABLE_ASSERTIONS "Enable assertions in LLVM" ON)
 
+# Default values for LLVM_URL and LLVM_SHA256. This is required because "-DLLVM_URL=" would be an empty URL
+if("${LLVM_URL}" STREQUAL "")
+    set(LLVM_URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/llvm-project-19.1.7.src.tar.xz")
+endif()
+if("${LLVM_SHA256}" STREQUAL "")
+    set(LLVM_SHA256 "82401fea7b79d0078043f7598b835284d6650a75b93e64b6f761ea7b63097501")
+endif()
+
 set(LLVM_ARGS
     "-DLLVM_ENABLE_PROJECTS:STRING=lld;clang;clang-tools-extra"
     "-DLLVM_ENABLE_ASSERTIONS:STRING=${LLVM_ENABLE_ASSERTIONS}"
@@ -19,9 +27,9 @@ endif()
 
 ExternalProject_Add(llvm
     URL
-        "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/llvm-project-19.1.7.src.tar.xz"
+        ${LLVM_URL}
     URL_HASH
-        "SHA256=82401fea7b79d0078043f7598b835284d6650a75b93e64b6f761ea7b63097501"
+        "SHA256=${LLVM_SHA256}"
     CMAKE_CACHE_ARGS
         ${CMAKE_ARGS}
         ${LLVM_ARGS}
