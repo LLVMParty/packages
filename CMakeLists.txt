@@ -39,40 +39,40 @@ if(meson_EXECUTABLE STREQUAL "meson_EXECUTABLE-NOTFOUND")
 endif()
 message(STATUS "meson: ${meson_EXECUTABLE}")
 
-simple_git(https://github.com/nlohmann/json v3.11.3
+simple_git(https://github.com/nlohmann/json develop
     "-DJSON_BuildTests:STRING=OFF"
 )
-simple_git(https://github.com/ToruNiina/toml11 1340692 # master (2023-06-06)
+simple_git(https://github.com/ToruNiina/toml11 main # master (2023-06-06)
     "-DCMAKE_CXX_STANDARD:STRING=11"
 )
-simple_git(https://github.com/yhirose/cpp-httplib v0.13.1
+simple_git(https://github.com/yhirose/cpp-httplib master
     "-DHTTPLIB_USE_OPENSSL_IF_AVAILABLE:STRING=OFF"
     "-DHTTPLIB_IS_USING_BROTLI:STRING=OFF"
     "-DHTTPLIB_USE_BROTLI_IF_AVAILABLE:STRING=OFF"
 )
-simple_git(https://github.com/gflags/gflags v2.2.2
+simple_git(https://github.com/gflags/gflags master
 )
 simple_git(https://github.com/google/glog v0.6.0
     "-DGFLAGS_USE_TARGET_NAMESPACE:STRING=ON"
     "-DBUILD_TESTING:STRING=OFF"
 )
-simple_git(https://github.com/google/googletest v1.15.2
+simple_git(https://github.com/google/googletest main
     "-Dgtest_force_shared_crt:STRING=ON"
     "-DGFLAGS_USE_TARGET_NAMESPACE:STRING=ON"
 )
-simple_git(https://github.com/redis/hiredis afc29ee)
-simple_git(https://github.com/Tessil/ordered-map v1.1.0)
-simple_git(https://github.com/fmtlib/fmt 10.2.1
+simple_git(https://github.com/redis/hiredis master)
+simple_git(https://github.com/Tessil/ordered-map master)
+simple_git(https://github.com/fmtlib/fmt master
     "-DFMT_DOC:STRING=OFF"
     "-DFMT_TEST:STRING=OFF"
     "-DFMT_SYSTEM_HEADERS:STRING=ON"
 )
-simple_git(https://github.com/gabime/spdlog e593f66
+simple_git(https://github.com/gabime/spdlog v1.x
     "-DSPDLOG_FMT_EXTERNAL:STRING=ON"
     "-DSPDLOG_SYSTEM_INCLUDES:STRING=ON"
     "-DSPDLOG_BUILD_EXAMPLE:STRING=OFF"
 )
-simple_git(https://github.com/lief-project/LIEF 0.15.1
+simple_git(https://github.com/lief-project/LIEF  main
     "-DLIEF_EXAMPLES:STRING=OFF"
     "-DLIEF_USE_CCACHE:STRING=OFF"
 )
@@ -80,13 +80,13 @@ simple_git(https://github.com/capstone-engine/capstone 5.0.3
     "-DCAPSTONE_BUILD_TESTS:STRING=OFF"
     "-DCAPSTONE_BUILD_CSTOOL:STRING=OFF"
 )
-simple_git(https://github.com/Z3Prover/z3 z3-4.13.2
+simple_git(https://github.com/Z3Prover/z3 master
     "-DZ3_BUILD_LIBZ3_SHARED:STRING=OFF"
 )
 simple_git(https://github.com/LLVMParty/minisat modern-package-v1
     "-DBUILD_SHARED_LIBS:STRING=OFF"
 )
-simple_git(https://github.com/stp/stp a9bc247d98cd98213b2d0f6821dc51b823c50483
+simple_git(https://github.com/stp/stp master
     "-DBUILD_EXECUTABLES:STRING=OFF"
     "-DSTATICCOMPILE:STRING=ON"
 )
