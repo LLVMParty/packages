@@ -5,11 +5,19 @@ message(STATUS "Python3: ${Python3_EXECUTABLE}")
 
 # TODO: pass compiler flags
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(compiler clang)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(compiler gnu)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(compiler ms)
+endif()
 set(MFILE_ARGS
     "install"
     "--install-dir=install"
     "--cc=${CMAKE_C_COMPILER}"
     "--cxx=${CMAKE_CXX_COMPILER}"
+    "--compiler=${compiler}"
 )
 
 if(CMAKE_OSX_SYSROOT)
