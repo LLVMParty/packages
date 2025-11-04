@@ -5,12 +5,12 @@ message(STATUS "Python3: ${Python3_EXECUTABLE}")
 
 # TODO: pass compiler flags
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND MSVC)
+    set(compiler ms) #msvc or clang-cl
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(compiler clang)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(compiler gnu)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(compiler ms)
 endif()
 set(MFILE_ARGS
     "install"
