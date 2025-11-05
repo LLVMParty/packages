@@ -1,5 +1,7 @@
 # packages
 
+**Important**: This repository serves as an example and does not come with support or guarantees in any way.
+
 ## Local builds
 
 ```sh
