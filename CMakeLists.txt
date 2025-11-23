@@ -1,6 +1,12 @@
 # https://alexreinking.com/blog/how-to-use-cmake-without-the-agonizing-pain-part-1.html
 cmake_minimum_required(VERSION 3.22)
 
+# Default to a Release config. Required before project() because Windows defaults to Debug
+set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
+if(CMAKE_BUILD_TYPE STREQUAL "")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
+endif()
+
 project(dependencies)
 
 option(USE_EXTERNAL_LLVM "Do not compile LLVM as part of the superbuild, use an external one instead" OFF)

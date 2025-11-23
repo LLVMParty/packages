@@ -1,4 +1,4 @@
-# /Users/admin/Projects/cxx-common/ports/xed/XEDConfig.cmake
+# Reference: https://github.com/lifting-bits/cxx-common/blob/e0063b2f5986582ed8dcab0c2863abf0893b3082/ports/xed/XEDConfig.cmake
 
 if(XED_FOUND)
     return()

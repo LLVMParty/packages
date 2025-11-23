@@ -53,7 +53,7 @@ apt install --no-install-recommends -y \
 # Build LLVM
 RUN \
 mkdir /llvm && \
-cmake -B build "-DCMAKE_INSTALL_PREFIX=/llvm" "-DBUILD_SHARED_LIBS=ON" "-DLLVM_URL=${LLVM_URL}" "-DLLVM_SHA256=${LLVM_SHA256}" && \
+cmake -B build "-DCMAKE_BUILD_TYPE=Release" "-DCMAKE_INSTALL_PREFIX=/llvm" "-DBUILD_SHARED_LIBS=ON" "-DLLVM_URL=${LLVM_URL}" "-DLLVM_SHA256=${LLVM_SHA256}" && \
 cmake --build build && \
 rm -rf build
 
