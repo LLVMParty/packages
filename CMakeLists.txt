@@ -50,13 +50,13 @@ simple_git(https://github.com/yhirose/cpp-httplib v0.13.1
     "-DHTTPLIB_IS_USING_BROTLI:STRING=OFF"
     "-DHTTPLIB_USE_BROTLI_IF_AVAILABLE:STRING=OFF"
 )
-simple_git(https://github.com/gflags/gflags v2.2.2
+simple_git(https://github.com/gflags/gflags 52e94563eba1968783864942fedf6e87e3c611f4
 )
-simple_git(https://github.com/google/glog v0.6.0
+simple_git(https://github.com/google/glog v0.7.1
     "-DGFLAGS_USE_TARGET_NAMESPACE:STRING=ON"
     "-DBUILD_TESTING:STRING=OFF"
 )
-simple_git(https://github.com/google/googletest v1.15.2
+simple_git(https://github.com/google/googletest v1.17.0
     "-Dgtest_force_shared_crt:STRING=ON"
     "-DGFLAGS_USE_TARGET_NAMESPACE:STRING=ON"
 )
@@ -96,8 +96,7 @@ include(bitwuzla.cmake)
 if(NOT USE_EXTERNAL_LLVM)
     include(llvm.cmake)
 endif()
-simple_git(https://github.com/LLVMParty/remill llvm-19-v2
-    "-DUSE_SYSTEM_DEPENDENCIES:STRING=ON"
+simple_git(https://github.com/LLVMParty/remill 6892375a977b6746cb2ab7eb70637caafca5aaa5 # v6.0.0 (+ minor patches)
     "-DREMILL_ENABLE_TESTING:STRING=OFF"
 )
 simple_git(https://github.com/LLVMParty/alive2 cmake-package-souper-v7)
