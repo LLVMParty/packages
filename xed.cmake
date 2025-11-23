@@ -1,15 +1,26 @@
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 message(STATUS "Python3: ${Python3_EXECUTABLE}")
 
-# Reference: /Users/admin/Projects/cxx-common/ports/xed/portfile.cmake
+# Reference: https://github.com/lifting-bits/cxx-common/blob/e0063b2f5986582ed8dcab0c2863abf0893b3082/ports/xed/portfile.cmake
 
 # TODO: pass compiler flags
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND MSVC)
+    set(compiler ms) #msvc or clang-cl
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "^(Apple)?Clang$")
+    set(compiler clang)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(compiler gnu)
+else()
+    message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
+endif()
 
 set(MFILE_ARGS
     "install"
     "--install-dir=install"
     "--cc=${CMAKE_C_COMPILER}"
     "--cxx=${CMAKE_CXX_COMPILER}"
+    "--compiler=${compiler}"
 )
 
 if(CMAKE_OSX_SYSROOT)
@@ -41,7 +52,7 @@ ExternalProject_Add(mbuild
     GIT_REPOSITORY
         "https://github.com/intelxed/mbuild"
     GIT_TAG
-        "v2024.09.08"
+        "v2022.04.17"
     GIT_PROGRESS
         ON
     GIT_SHALLOW
@@ -60,7 +71,7 @@ ExternalProject_Add(xed
     GIT_REPOSITORY
         "https://github.com/LLVMParty/xed"
     GIT_TAG
-        "sanitizers-v1"
+        "sanitizers-v2022.04.17"
     GIT_PROGRESS
         ON
     GIT_SHALLOW
