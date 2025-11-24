@@ -25,7 +25,7 @@ rm -rf /var/lib/apt/lists/*
 RUN \
 mkdir /dependencies && \
 python hash.py --debug --simple > /dependencies/hash.txt && \
-cmake -B build "-DCMAKE_INSTALL_PREFIX=/dependencies" -DUSE_EXTERNAL_LLVM=ON && \
+cmake -B build "-DCMAKE_INSTALL_PREFIX=/dependencies" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUSE_EXTERNAL_LLVM=ON && \
 cmake --build build && \
 rm -rf build
 

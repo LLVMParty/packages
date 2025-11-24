@@ -102,7 +102,7 @@ include(bitwuzla.cmake)
 if(NOT USE_EXTERNAL_LLVM)
     include(llvm.cmake)
 endif()
-simple_git(https://github.com/LLVMParty/remill 6892375a977b6746cb2ab7eb70637caafca5aaa5 # v6.0.0 (+ minor patches)
+simple_git(https://github.com/LLVMParty/remill 9816ccca56f4f933e57f687d0a9de9393caa92eb # v6.0.0 (+ minor patches)
     "-DREMILL_ENABLE_TESTING:STRING=OFF"
 )
 simple_git(https://github.com/LLVMParty/alive2 cmake-package-souper-v7)
