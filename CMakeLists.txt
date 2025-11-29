@@ -31,6 +31,40 @@ if(USE_EXTERNAL_LLVM)
     message(STATUS "LLVM ${LLVM_PACKAGE_VERSION}: ${LLVM_DIR}")
 endif()
 
+# On macOS, search Homebrew for keg-only versions of Bison and Flex. Xcode does
+# not provide new enough versions for us to use.
+if(CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
+    execute_process(
+        COMMAND brew --prefix bison 
+        RESULT_VARIABLE BREW_BISON
+        OUTPUT_VARIABLE BREW_BISON_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if(BREW_BISON EQUAL 0 AND EXISTS "${BREW_BISON_PREFIX}")
+        message(STATUS "Found Bison keg installed by Homebrew at ${BREW_BISON_PREFIX}")
+        set(BISON_EXECUTABLE "${BREW_BISON_PREFIX}/bin/bison")
+    else()
+        message(FATAL_ERROR "Bison not found, to install: brew install bison")
+    endif()
+    
+    execute_process(
+        COMMAND brew --prefix flex 
+        RESULT_VARIABLE BREW_FLEX
+        OUTPUT_VARIABLE BREW_FLEX_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if(BREW_FLEX EQUAL 0 AND EXISTS "${BREW_FLEX_PREFIX}")
+        message(STATUS "Found Flex keg installed by Homebrew at ${BREW_FLEX_PREFIX}")
+        set(FLEX_EXECUTABLE "${BREW_FLEX_PREFIX}/bin/flex")
+    else()
+        message(FATAL_ERROR "Flex not found, to install: brew install flex")
+    endif()
+else()
+    message(STATUS "Looking for flex/bison")
+    find_package(FLEX 2.6 REQUIRED)
+    find_package(BISON 2.6 REQUIRED)
+endif()
+
 if(USE_SANITIZERS)
     list(APPEND CMAKE_C_FLAGS "-fsanitize=address,undefined")
     list(APPEND CMAKE_CXX_FLAGS "-fsanitize=address,undefined")
