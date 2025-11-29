@@ -24,12 +24,26 @@ if(USE_EXTERNAL_LLVM)
             set(CMAKE_PREFIX_PATH "${BREW_LLVM_PREFIX}")
             message(STATUS "Found LLVM keg installed by Homebrew at ${BREW_LLVM_PREFIX}")
         else()
-            message(FATAL_ERROR "LLVM not found, to install: brew install llvm")
+            message(WARNING "LLVM not found, to install: brew install llvm")
         endif()
     endif()
     find_package(LLVM CONFIG REQUIRED)
     message(STATUS "LLVM ${LLVM_PACKAGE_VERSION}: ${LLVM_DIR}")
 endif()
+
+if(USE_SANITIZERS)
+    list(APPEND CMAKE_C_FLAGS "-fsanitize=address,undefined")
+    list(APPEND CMAKE_CXX_FLAGS "-fsanitize=address,undefined")
+endif()
+
+include(superbuild.cmake)
+
+# Meson is necessary to build bitwuzla
+find_program(meson_EXECUTABLE meson NO_CACHE NO_PACKAGE_ROOT_PATH NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_INSTALL_PREFIX NO_CMAKE_FIND_ROOT_PATH)
+if(meson_EXECUTABLE STREQUAL "meson_EXECUTABLE-NOTFOUND")
+    message(FATAL_ERROR "Could not find 'meson' in the PATH")
+endif()
+message(STATUS "meson: ${meson_EXECUTABLE}")
 
 # On macOS, search Homebrew for keg-only versions of Bison and Flex. Xcode does
 # not provide new enough versions for us to use.
@@ -64,20 +78,6 @@ else()
     find_package(FLEX 2.6 REQUIRED)
     find_package(BISON 2.6 REQUIRED)
 endif()
-
-if(USE_SANITIZERS)
-    list(APPEND CMAKE_C_FLAGS "-fsanitize=address,undefined")
-    list(APPEND CMAKE_CXX_FLAGS "-fsanitize=address,undefined")
-endif()
-
-include(superbuild.cmake)
-
-# Meson is necessary to build bitwuzla
-find_program(meson_EXECUTABLE meson NO_CACHE NO_PACKAGE_ROOT_PATH NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH NO_CMAKE_INSTALL_PREFIX NO_CMAKE_FIND_ROOT_PATH)
-if(meson_EXECUTABLE STREQUAL "meson_EXECUTABLE-NOTFOUND")
-    message(FATAL_ERROR "Could not find 'meson' in the PATH")
-endif()
-message(STATUS "meson: ${meson_EXECUTABLE}")
 
 simple_git(https://github.com/nlohmann/json v3.11.3
     "-DJSON_BuildTests:STRING=OFF"
@@ -133,9 +133,27 @@ simple_git(https://github.com/stp/stp a9bc247d98cd98213b2d0f6821dc51b823c50483
 include(xed.cmake)
 include(gmp.cmake)
 include(bitwuzla.cmake)
-if(NOT USE_EXTERNAL_LLVM)
+
+set(LLVM_CONFIG "${CMAKE_INSTALL_PREFIX}/lib/cmake/llvm/LLVMConfig.cmake")
+if(USE_EXTERNAL_LLVM)
+    # Create a forwarding LLVMConfig.cmake file that adds the external LLVM to CMAKE_PREFIX_PATH
+    # and then includes the external LLVMConfig.cmake
+    if(NOT EXISTS "${LLVM_DIR}/LLVMConfig.cmake")
+        message(FATAL_ERROR "LLVMConfig.cmake not found in LLVM_DIR (${LLVM_DIR})")
+    endif()
+    file(WRITE "${CMAKE_INSTALL_PREFIX}/lib/cmake/llvm/LLVMConfig.cmake"
+        "if(NOT \"${LLVM_INSTALL_PREFIX}\" IN_LIST CMAKE_PREFIX_PATH)\n"
+        "  list(PREPEND CMAKE_PREFIX_PATH \"${LLVM_INSTALL_PREFIX}\")\n"
+        "  set(CMAKE_PREFIX_PATH \"\${CMAKE_PREFIX_PATH}\" CACHE PATH \"\" FORCE)\n"
+        "  message(STATUS \"Updating CMAKE_PREFIX_PATH: \${CMAKE_PREFIX_PATH}\")\n"
+        "endif()\n"
+        "include(\"${LLVM_DIR}/LLVMConfig.cmake\")\n"
+    )
+else()
+    file(REMOVE "${LLVM_CONFIG}")
     include(llvm.cmake)
 endif()
+
 simple_git(https://github.com/LLVMParty/remill 9816ccca56f4f933e57f687d0a9de9393caa92eb # v6.0.0 (+ minor patches)
     "-DREMILL_ENABLE_TESTING:STRING=OFF"
 )
