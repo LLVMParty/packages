@@ -52,10 +52,8 @@ ExternalProject_Add(mbuild
     GIT_REPOSITORY
         "https://github.com/intelxed/mbuild"
     GIT_TAG
-        "v2022.04.17"
+        "v2024.11.04"
     GIT_PROGRESS
-        ON
-    GIT_SHALLOW
         ON
     CONFIGURE_COMMAND
         "${CMAKE_COMMAND}" -E true
@@ -69,12 +67,10 @@ ExternalProject_Add(mbuild
 
 ExternalProject_Add(xed
     GIT_REPOSITORY
-        "https://github.com/LLVMParty/xed"
+        "https://github.com/intelxed/xed"
     GIT_TAG
-        "sanitizers-v2022.04.17"
+        "v2025.06.08"
     GIT_PROGRESS
-        ON
-    GIT_SHALLOW
         ON
     CMAKE_CACHE_ARGS
         ${CMAKE_ARGS}

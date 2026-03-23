@@ -154,7 +154,7 @@ else()
     include(llvm.cmake)
 endif()
 
-simple_git(https://github.com/LLVMParty/remill 9816ccca56f4f933e57f687d0a9de9393caa92eb # v6.0.0 (+ minor patches)
+simple_git(https://github.com/LLVMParty/remill 62f16fe14300391312ba144b465b1c564dd1f6bc # 2025.03.23
     "-DREMILL_ENABLE_TESTING:STRING=OFF"
 )
 simple_git(https://github.com/LLVMParty/alive2 cmake-package-souper-v7)
