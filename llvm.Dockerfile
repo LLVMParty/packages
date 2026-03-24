@@ -97,6 +97,7 @@ apt install --no-install-recommends -y \
     bison \
     pkg-config \
     && \
+rm -f /etc/apt/sources.list.d/kitware.list && \
 apt autoremove -y && \
 rm -rf /var/lib/apt/lists/* && \
 python -m pip --no-cache-dir install meson

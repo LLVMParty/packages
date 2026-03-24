@@ -1,6 +1,10 @@
 ARG LLVM_VERSION=22.04-llvm19.1.7
 
 FROM ghcr.io/llvmparty/packages/ubuntu:${LLVM_VERSION} AS build
+
+# Issue with kitware signature rotation
+RUN rm -f /etc/apt/sources.list.d/kitware.list
+
 WORKDIR /tmp
 COPY \
     bitwuzla.cmake \
@@ -32,6 +36,9 @@ rm -rf build
 # Actual final image
 FROM ghcr.io/llvmparty/packages/ubuntu:${LLVM_VERSION} AS dependencies
 LABEL org.opencontainers.image.source=https://github.com/LLVMParty/packages
+
+# Issue with kitware signature rotation
+RUN rm -f /etc/apt/sources.list.d/kitware.list
 
 COPY --from=build /dependencies /dependencies
 ENV CMAKE_PREFIX_PATH="/dependencies" \
