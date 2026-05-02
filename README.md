@@ -40,3 +40,20 @@ docker push "$TAG"
 References:
 - https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/
 - https://docs.docker.com/build/building/multi-stage/
+
+## Configuration
+
+You need to enable long paths:
+
+```ini
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
+"LongPathsEnabled"=dword:00000001
+```
+
+And then enable it in git as well:
+
+```
+git config --global core.longpaths true
+```
