@@ -90,6 +90,21 @@ simple_git(https://github.com/yhirose/cpp-httplib v0.13.1
     "-DHTTPLIB_IS_USING_BROTLI:STRING=OFF"
     "-DHTTPLIB_USE_BROTLI_IF_AVAILABLE:STRING=OFF"
 )
+ExternalProject_Add(smt_wire
+    GIT_REPOSITORY
+        https://github.com/LLVMParty/smt-server
+    GIT_TAG
+        ae1ed7c70b83882004e73c93863b57ea3a34a281
+    GIT_PROGRESS
+        ON
+    SOURCE_SUBDIR
+        cpp
+    CMAKE_CACHE_ARGS
+        ${CMAKE_ARGS}
+        "-DSMT_WIRE_CPP_BUILD_TESTS:STRING=OFF"
+    CMAKE_GENERATOR
+        "Ninja"
+)
 simple_git(https://github.com/gflags/gflags 52e94563eba1968783864942fedf6e87e3c611f4
 )
 simple_git(https://github.com/google/glog v0.7.1
